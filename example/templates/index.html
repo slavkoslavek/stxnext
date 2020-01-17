@@ -1,0 +1,18 @@
+{% load bootstrap3 %}
+{% bootstrap_css %}
+<html>
+<head>
+    <title>Little film library</title>
+</head>
+<center><h1>Little film library</h1></center>
+<br />
+<center>
+<b><a href="{% url 'movie_list' %}">FILM LIST</a></b>
+<a href="{% url 'genre_list' %}">GENRE LIST</a>
+<b><a href="{% url 'movie_add' %}">ADD NEW FILM TO DB</a></b>
+<a href="{% url 'genre_add' %}">ADD NEW GENRE</a>
+</center>
+<div class="wrapper">
+    {% block content %}{% endblock %}
+</div>
+</html>

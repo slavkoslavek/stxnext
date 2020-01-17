@@ -1,0 +1,8 @@
+<html>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="'submit">Confirm</button>
+</form>
+<a href="{% url 'genre_list' %}">Back to genres list</a>
+</html>

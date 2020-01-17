@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">List of Movies</div>
+    <div class="panel-heading">Movies in database: {{movies|length}}</div>
+    <br />
+    <div class="panel-body">
+    <ul>
+        {% for movie in movies %}
+        <li>{{movie.name|upper }} - {{ movie.released}} - {{movie.Genre}} - <a href="/movie/update/{{movie.id}}">EDIT</a> - <a href="/movie/delete/{{movie.id}}">DELETE</a></li>
+        {% endfor %}
+    </ul>
+    </div>
+</div>
+
+{% endblock %}

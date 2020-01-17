@@ -1,0 +1,25 @@
+{% extends 'index.html' %}
+
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genres list</title>
+</head>
+{% block content %}
+<body>
+<center><b>Genres list</b></center>
+<ul>
+        {% for genre in genres %}
+        <li>{{genre.name|upper }} <a href="/genre/delete/{{genre.id}}">DELETE</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+
+
+
+
+{% endblock %}
