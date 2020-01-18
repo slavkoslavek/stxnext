@@ -3,6 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from example.models import Movie, Genre
 from example.forms import MovieForm, GenreForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from rest_framework import viewsets, status, filters
+from rest_framework.response import Response
+from example.serializers import MovieSerializer, MovieMiniSerializer
+from rest_framework.decorators import action
+from rest_framework.authentication import TokenAuthentication
 
 # Create your views here.
 
@@ -67,6 +72,64 @@ class MovieDetailsView(DetailView):
         slug = self.kwargs['slug']
         a_obj = Movie.objects.get(name__icontains=slug)
         return a_obj
+
+# class MovieViewSet(viewsets.ModelViewSet):
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
+
+class MovieViewSet(viewsets.ModelViewSet):
+
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    # filter_fields = ("name", "year", "viewed")
+    authentication_classes = (TokenAuthentication,)
+
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ["name"]
+    ordering_fields = ["year"]
+
+    # def get_queryset(self):
+    #     queryset = Movie.objects.filter(Genre__name='Horror')
+    #     return queryset
+
+    def get_queryset(self):
+        # query_params = self.request.query_params
+        queryset = self.queryset
+        #
+        # year = query_params.get("year")
+        # viewed = query_params.get("viewed")
+        #
+        # if year:
+        #     queryset = queryset.filter(year=year)
+        #
+        # if viewed:
+        #     queryset = queryset.filter(viewed=viewed)
+
+        return queryset
+
+    # def list(self, request, *args, **kwargs):
+    #     serializer = MovieMiniSerializer(self.get_queryset(), many=True)
+    #     return Response(serializer.data)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = MovieSerializer(instance)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def viewed(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.viewed = True
+        instance.save()
+        serializer = MovieSerializer(instance)
+        return Response(serializer.data)
 
 
 

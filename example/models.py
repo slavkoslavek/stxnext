@@ -12,6 +12,7 @@ class Movie(models.Model):
     released = models.CharField(max_length=128)
     created_on = models.DateTimeField(auto_now_add=True)
     Genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
+    viewed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

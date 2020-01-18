@@ -13,24 +13,33 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
+from rest_framework.authtoken import views
 from example.views import hello_world, hello_name, hello_world_template, MovieListView, GenreListView, MovieCreateView, \
-    MovieUpdateView, MovieDeleteView, GenreCreateView, GenreDeleteView, MovieDetailsView
+    MovieUpdateView, MovieDeleteView, GenreCreateView, GenreDeleteView, MovieDetailsView, MovieViewSet
+
+router = routers.DefaultRouter()
+router.register("movies", MovieViewSet, basename='MovieViewSet')
 
 
 urlpatterns = [
-    path('', MovieListView.as_view()),
+    # path('', MovieListView.as_view()),
     path('admin/', admin.site.urls),
     path('hello/', hello_world),
     path("hello/<str:name>/", hello_name),
-    path("movies/", hello_world_template),
-    path("movie_list/", MovieListView.as_view(), name= 'movie_list'),
-    path("genre_list/", GenreListView.as_view(), name= 'genre_list'),
-    path("movie_add/", MovieCreateView.as_view(), name='movie_add'),
-    path('movie/update/<int:pk>', MovieUpdateView.as_view(), name="movie_edit"),
-    path('movie/delete/<int:pk>', MovieDeleteView.as_view(), name="movie_delete"),
-    path('<slug:slug>/', MovieDetailsView.as_view(), name='movie_details'),
-    path("genre/add", GenreCreateView.as_view(), name = 'genre_add'),
-    path('genre/delete/<int:pk>', GenreDeleteView.as_view(), name="genre_delete")
+    # path("movies/", hello_world_template),
+    # path("movie_list/", MovieListView.as_view(), name= 'movie_list'),
+    # path("genre_list/", GenreListView.as_view(), name= 'genre_list'),
+    # path("movie_add/", MovieCreateView.as_view(), name='movie_add'),
+    # path('movie/update/<int:pk>', MovieUpdateView.as_view(), name="movie_edit"),
+    # path('movie/delete/<int:pk>', MovieDeleteView.as_view(), name="movie_delete"),
+    # path('<slug:slug>/', MovieDetailsView.as_view(), name='movie_details'),
+    # path("genre/add", GenreCreateView.as_view(), name = 'genre_add'),
+    # path('genre/delete/<int:pk>', GenreDeleteView.as_view(), name="genre_delete"),
+    path('api-auth/', include("rest_framework.urls")),
+    path("", include(router.urls)),
+    path("api-token-auth", views.obtain_auth_token)
 ]
